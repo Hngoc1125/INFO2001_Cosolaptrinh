@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Khai báo cấu trúc
+// Khai bao cau truc
 struct Book {
   char ten[100];
   char tacgia[100];
   float gia;
 };
 
-// Nhập thông tin sách
+// Nhap thong tin sach
 void nhap(struct Book *s) {
   printf("Nhập tên sách: ");
   fgets(s->ten, sizeof(s->ten), stdin);
-  s->ten[strcspn(s->ten, "\n")] = '\0'; // Xóa ký tự xuống dòng
+  s->ten[strcspn(s->ten, "\n")] = '\0'; 
 
   printf("Nhập tác giả: ");
   fgets(s->tacgia, sizeof(s->tacgia), stdin);
-  s->tacgia[strcspn(s->tacgia, "\n")] = '\0'; // Xóa ký tự xuống dòng
+  s->tacgia[strcspn(s->tacgia, "\n")] = '\0'; 
 
   printf("Nhập giá sách: ");
   scanf("%f", &s->gia);
@@ -28,7 +28,7 @@ void nhap(struct Book *s) {
   }
 }
 
-// Hiển thị thông tin
+// Hien thi thong tin
 void xuat(struct Book *s) {
   printf("Tên sách: %s\n", s->ten);
   printf("Tác giả: %s\n", s->tacgia);
@@ -41,7 +41,7 @@ void xuat(struct Book *s) {
   printf("Giá sách: %.2f\n", s->gia);
 }
 
-// Cấp phát động mảng Book
+// Cap phat dong mang Book
 struct Book *capphat(int n) {
   struct Book *arr = (struct Book *)malloc(n * sizeof(struct Book));
   if (arr == NULL) {
@@ -51,32 +51,32 @@ struct Book *capphat(int n) {
   return arr;
 }
 
-// Giải phóng bộ nhớ mảng Book
+// Giai phong bo nho mang Book
 void giaiphong(struct Book *arr) {
   free(arr);
 }
 
 int main() {
-  // Số lượng sách
+  // So luong sach
   int n;
   printf("Nhập số lượng sách: ");
   scanf("%d", &n);
-  getchar(); // Đọc ký tự xuống dòng sau khi nhập số lượng sách
+  getchar(); 
 
-  // Cấp phát mảng Book
+  // Cap phat mang cho Book
   struct Book *arr = capphat(n);
 
-  // Nhập thông tin sách
+  // Nhap thong tin sach
   for (int i = 0; i < n; i++) {
     nhap(&arr[i]);
   }
 
-  // Hiển thị thông tin sách
+  // Hien thi thong tin sach
   for (int i = 0; i < n; i++) {
     xuat(&arr[i]);
   }
 
-  // Giải phóng bộ nhớ
+  // Giai phong bo nho
   giaiphong(arr);
 
   return 0;
