@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct contact {
+  int id;
+  char name[100];
+  char phone_number[10];
+  char email[100];
+};
+
+void add_contact(struct contact **contacts, int *num_contacts) {
+  struct contact *new_contact = malloc(sizeof(struct contact));
+  if (new_contact == NULL) {
+    printf("Không đủ bộ nhớ.\n");
+    return;
+  }
+
+  printf("Nhập tên: ");
+  fgets(new_contact->name, sizeof(new_contact->name), stdin);
+  new_contact->name[strcspn(new_contact->name, "\n")] = '\0';
+
+  printf("Nhập số điện thoại: ");
+  fgets(new_contact->phone_number, sizeof(new_contact->phone_number), stdin);
+  new_contact->phone_number[strcspn(new_contact->phone_number, "\n")] = '\0';
+
+  printf("Nhập email: ");
+  fgets(new_contact->email, sizeof(new_contact->email), stdin);
+  new_contact->email[strcspn(new_contact->email, "\n")] = '\0';
+
+  new_contact->id = *num_contacts + 1;
+
+  (*contacts) = realloc(*contacts, (*num_contacts + 1) * sizeof(struct contact));
+  (*contacts)[*num_contacts] = *new_contact;
+  (*num_contacts)++;
+
+  free(new_contact);
+}
+
+void delete_contact(struct contact **contacts, int *num_contacts) {
+  printf("Nhập số liên lạc cần xóa: ");
+  int contact_id;
+  scanf("%d", &contact_id);
+
+  int i;
+  for (i = 0; i < *num_contacts; i++) {
+    if ((*contacts)[i].id == contact_id) {
+      break;
+    }
+  }
+
+  if (i == *num_contacts) {
+    printf("Không tìm thấy thông tin liên lạc.\n");
+    return;
+  }
+
+  for (int j = i; j < *num_contacts - 1; j++) {
+    (*contacts)[j] = (*contacts)[j + 1];
+  }
+
+  (*num_contacts)--;
+  *contacts = realloc(*contacts, (*num_contacts) * sizeof(struct contact));
+}
+
+void search_contact(const struct contact *contacts, int num_contacts) {
+  printf("Nhập số liên lạc cần tìm kiếm: ");
+  int contact_id;
+  scanf("%d", &contact_id);
+
+  int i;
+  for (i = 0; i < num_contacts; i++) {
+    if (contacts[i].id == contact_id) {
+      break;
+    }
+  }
+
+  if (i == num_contacts) {
+    printf("Không tìm thấy thông tin liên lạc.\n");
+    return;
+  }
+
+  printf("Tên: %s\n", contacts[i].name);
+  printf("Số điện thoại: %s\n", contacts[i].phone_number);
+  printf("Email: %s\n", contacts[i].email);
+}
+
+void update_contact(struct contact *contacts, int num_contacts) {
+  printf("Nhập số liên lạc cần cập nhật: ");
+  int contact_id;
+  scanf("%d", &contact_id);
+
+  int i;
+  for (i = 0; i < num_contacts; i++) {
+    if (contacts[i].id == contact_id) {
+      break;
+    }
+  }
+
+  if (i == num_contacts) {
+    printf("Không tìm thấy thông tin liên lạc.\n");
+    return;
+  }
+
+  printf("Nhập tên mới: ");
+  fgets(contacts[i].name, sizeof(contacts[i].name), stdin);
+  contacts[i].name[strcspn(contacts[i].name, "\n")] = '\0';
+
+  printf("Nhập số điện thoại mới: ");
+  fgets(contacts[i].phone_number, sizeof(contacts[i].phone_number), stdin);
+  contacts[i].phone_number[strcspn(contacts[i].phone_number, "\n")] = '\0';
+
+  printf("Nhập email mới: ");
+  fgets(contacts[i].email, sizeof(contacts[i].email), stdin);
+  contacts[i].email[strcspn(contacts[i].email, "\n")] = '\0';
+}
+
+int main() {
+  struct contact *contacts = NULL;
+  int num_contacts = 0;
+
+  free(contacts);
+
+  return 0;
+}

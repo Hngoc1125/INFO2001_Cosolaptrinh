@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct student {
+  char name[100];
+  int student_id;
+  float score;
+};
+
+void write_student_to_file(const struct student *s, FILE *fp) {
+  fwrite(s, sizeof(struct student), 1, fp);
+}
+
+void read_student_from_file(struct student *s, FILE *fp) {
+  fread(s, sizeof(struct student), 1, fp);
+}
+
+void display_student(const struct student *s) {
+  printf("Tên: %s\n", s->name);
+  printf("ID: %d\n", s->student_id);
+  printf("Điểm: %.2f\n", s->score);
+  printf("\n");
+}
+
+int main() {
+  struct student s1 = {"Hong Ngoc", 289, 85.5};
+  struct student s2;
+
+  FILE *fp = fopen("student.bin", "wb");
+  if (fp == NULL) {
+    printf("Không thể mở tệp.\n");
+    return 1;
+  }
+
+  write_student_to_file(&s1, fp);
+  fclose(fp);
+
+  fp = fopen("student.bin", "rb");
+  if (fp == NULL) {
+    printf("Không thể mở tệp tin.\n");
+    return 1;
+  }
+
+  read_student_from_file(&s2, fp);
+  fclose(fp);
+
+  display_student(&s2);
+
+  return 0;
+}
