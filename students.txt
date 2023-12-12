@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct student { 
+  char name[100];
+  int student_id;
+  float score;
+};
+//Khai bao ham
+void add_student(struct student *student);
+void remove_student(int student_id);
+void update_student(int student_id, struct student *student);
+
+int main() {
+  struct student new_student = {"Hong Ngoc", 289, 85.5}; //Khai bao bien student
+  add_student(&new_student);//Them sv new-student vao tep
+
+  remove_student(289);//xoa sinh vien co ma 289
+
+  struct student updated_student = {"Trang Nhi", 471, 92.0};//Gan cac gia tri ban dau
+  update_student(471, &updated_student);//Cap nhat thong tin sinh vien
+
+  return 0;
+}
+
+void add_student(struct student *student) {
+  FILE *fp = fopen("students.txt", "a");//Mo tep o che do ghi tiep
+  if (fp == NULL) {//kiem tra xem mo tep thanh cong hay khong, neu that bai bao loi va thoat chuong trinh
+    printf("Không thể mở tệp tin.\n");
+    exit(1);
+  }
+
+  fprintf(fp, "%s %d %.2f\n", student->name, student->student_id, student->score);//ghi thong tin sinh vien vao tep
+  fclose(fp);
+}
+
+void remove_student(int student_id) {
+  FILE *fp = fopen("students.txt", "r");
+  if (fp == NULL) {
+    printf("Không thể mở tệp tin.\n");
+    exit(1);
+  }
+
+  FILE *tmp_fp = fopen("tmp.txt", "w");
+  if (tmp_fp == NULL) {
+    fclose(fp);
+    printf("Không thể mở tệp tin tạm thời.\n");
+    exit(1);
+  }
+
+  struct student student;
+  while (fscanf(fp, "%s %d %f", student.name, &student.student_id, &student.score) == 3) {
+    if (student.student_id != student_id) {
+      fprintf(tmp_fp, "%s %d %.2f\n", student.name, student.student_id, student.score);
+    }
+  }
+
+  fclose(fp);
+  fclose(tmp_fp);
+
+  remove("students.txt");
+  rename("tmp.txt", "students.txt");
+}
+
+void update_student(int student_id, struct student *student) {
+  FILE *fp = fopen("students.txt", "r");
+  if (fp == NULL) {
+    printf("Không thể mở tệp tin.\n");
+    exit(1);
+  }
+
+  FILE *tmp_fp = fopen("tmp.txt", "w");
+  if (tmp_fp == NULL) {
+    fclose(fp);
+    printf("Không thể mở tệp tin tạm thời.\n");
+    exit(1);
+  }
+
+  struct student student_old;
+  while (fscanf(fp, "%s %d %f", student_old.name, &student_old.student_id, &student_old.score) == 3) {
+    if (student_old.student_id == student_id) {
+      fprintf(tmp_fp, "%s %d %.2f\n", student->name, student->student_id, student->score);
+    } else {
+      fprintf(tmp_fp, "%s %d %.2f\n", student_old.name, student_old.student_id, student_old.score);
+    }
+  }
+
+  fclose(fp);
+  fclose(tmp_fp);
+
+  remove("students.txt");
+  rename("tmp.txt", "students.txt");
+}
